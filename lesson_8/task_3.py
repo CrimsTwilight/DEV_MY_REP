@@ -30,32 +30,23 @@
 Убедитесь, что программа корректно игнорирует пустые строки в файле.
 """
 
-
 file_to_open = input("Введите имя файла: ")
 
 try:
     with open(file=file_to_open, encoding='UTF-8') as file:
-        symbols = 0
-        for line in file:
-            symbols += len(line.strip(' ').strip('\n'))
-        if symbols != 0:
-            with open(file=file_to_open, encoding='UTF-8') as file:
-                lines = 0
-                words = 0
-                symbols = 0
-
-                for line in file:
-                    if line != '\n':
-                        lines += 1
-                    words += len(line.split())
-                    symbols += len(line.strip('\n'))
-
-                print("Количество непустых строк в файле: ", lines)
-                print("Количество слов в файле: ", words)
-                print("Количество символов в файле: ", symbols)
-                print("Средняя длина слов: ", symbols / words)
-        else:
+        lines = [line.strip() for line in file if line.strip()]
+        if not lines:
             print("Файл пуст!")
+        else:
+            words = sum(len(line.split()) for line in lines)
+            symbols = sum(len(line) for line in lines)
+            lines_str = ''.join(lines).replace(' ', '')
+            words_sym = len(lines_str)
+
+            print("Количество непустых строк в файле: ", len(lines))
+            print("Количество слов в файле: ", words)
+            print("Количество символов в файле: ", symbols)
+            print(f"Средняя длина слов: {words_sym / words:.1f} букв")
 except FileNotFoundError:
     print("Файл не найден, проверьте имя файла!")
 except PermissionError:
